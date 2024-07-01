@@ -1,0 +1,6 @@
+[env]
+CONFIG_PREFIX = "SH_"
+WEBAPP_ROOT_DIR = "webapp/dist"
+
+[cargo-new]
+vcs = "none"

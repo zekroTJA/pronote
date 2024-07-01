@@ -1,0 +1,58 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  run-server:
+    aliases:
+      - run
+    desc: Run the backend
+    cmds:
+      - cargo run -p server
+
+  run-webapp:
+    aliases:
+      - run-web
+      - web
+    desc: Run the web app
+    deps:
+      - deps-webapp
+    dir: webapp
+    cmds:
+      - bun run dev
+
+  build:
+    desc: Build the server and webapp in release mode
+    cmds:
+      - task: build-webapp
+      - task: build-server
+
+  build-server:
+    desc: Build the server in release mode
+    cmds:
+      - cargo build -p server --release
+
+  build-webapp:
+    aliases:
+      - build-web
+    desc: Build the web app in release mode
+    deps:
+      - deps-webapp
+    dir: webapp
+    cmds:
+      - bun run build
+
+  deps-webapp:
+    dir: webapp
+    sources:
+      - ./package.json
+      - ./bun.lockb
+    cmds:
+      - bun install
+
+  dc-dev:
+    aliases:
+      - dc
+    desc: Run on the docker-compose dev stack
+    cmds:
+      - docker-compose -f docker-compose.yml -f dev.docker-compose.yml {{.CLI_ARGS}}

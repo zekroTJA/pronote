@@ -1,0 +1,21 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+database = { path = "../database" }
+anyhow = "1.0.86"
+dotenv = "0.15.0"
+env_logger = "0.11.3"
+jsonwebtoken = "9.3.0"
+log = "0.4.21"
+openid = "0.14.0"
+rand = "0.8.5"
+rocket = { version = "0.5.1", features = ["json"] }
+serde = "1.0.203"
+url = "2.5.2"
+chrono = { version = "0.4.38", features = ["serde"] }
+lazy_static = "1.5.0"
+regex = "1.10.5"
+xid = "1.1.1"
