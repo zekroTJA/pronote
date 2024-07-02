@@ -39,6 +39,12 @@ impl Deref for Auth {
     }
 }
 
+impl Auth {
+    pub fn id(&self) -> &str {
+        &self.sub
+    }
+}
+
 fn decode_and_validate_token(
     client: &State<Client>,
     token: &str,

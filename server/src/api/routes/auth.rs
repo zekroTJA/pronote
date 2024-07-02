@@ -1,8 +1,6 @@
-use std::{ops::Deref, sync::Arc};
-
 use crate::{
     api::{
-        error::Error,
+        error::{Error, Result},
         guards::Auth,
         responders::{Cookies, Either},
     },
@@ -21,6 +19,7 @@ use rocket::{
     Route, State,
 };
 use serde::{Deserialize, Serialize};
+use std::{ops::Deref, sync::Arc};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Claims {
@@ -33,7 +32,7 @@ async fn login(
     client: &State<Client>,
     jwt_handler: &State<jwt::Handler>,
     redirect: Option<String>,
-) -> Result<Redirect, Error> {
+) -> Result<Redirect> {
     let claims = Claims {
         exp: jwt::expire_in(Duration::minutes(5)),
         redirect,
@@ -50,7 +49,7 @@ async fn callback<'r>(
     database: &State<Arc<Database>>,
     code: String,
     state: String,
-) -> Result<Cookies<Either<Redirect, Status>>, Error> {
+) -> Result<Cookies<Either<Redirect, Status>>> {
     let claims: Claims = jwt_handler.decode(&state, &["exp"])?;
 
     let mut token: Token = client.request_token(&code).await?.into();
@@ -91,7 +90,7 @@ async fn callback<'r>(
 }
 
 #[get("/check")]
-async fn check(id: Auth) -> Result<Json<<Auth as Deref>::Target>, Error> {
+async fn check(id: Auth) -> Result<Json<<Auth as Deref>::Target>> {
     Ok(Json(id.deref().clone()))
 }
 

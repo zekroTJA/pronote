@@ -10,7 +10,6 @@ CREATE TABLE "list" (
     "owner_id" VARCHAR(40) NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL,
     "name" TEXT NOT NULL,
-    "deleted" BOOLEAN NOT NULL,
     "description" TEXT,
     "timeout_seconds" INT,
 

@@ -1,7 +1,8 @@
 use core::fmt;
-
 use rocket::{http::Status, serde::json::Json, Responder};
 use serde::Serialize;
+
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Serialize)]
 struct ErrorModel {
@@ -30,6 +31,10 @@ impl Error {
 
     pub fn message(status: Status, message: impl Into<String>) -> Self {
         Self::new::<&'static str>(status, message, None)
+    }
+
+    pub fn not_found(message: impl Into<String>) -> Self {
+        Self::message(Status::NotFound, message)
     }
 }
 

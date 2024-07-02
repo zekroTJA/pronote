@@ -1,5 +1,5 @@
 [env]
-CONFIG_PREFIX = "SH_"
+CONFIG_PREFIX = "PN_"
 WEBAPP_ROOT_DIR = "webapp/dist"
 
 [cargo-new]

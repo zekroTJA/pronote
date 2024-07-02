@@ -18,7 +18,7 @@ async fn index() -> io::Result<NamedFile> {
     NamedFile::open(Path::new(ROOT_PATH).join("index.html")).await
 }
 
-#[get("/<file..>")]
+#[get("/<file..>", rank = 1)]
 async fn files(file: PathBuf) -> io::Result<NamedFile> {
     if let Some(file_name) = file.file_name().and_then(|v| v.to_str()) {
         if re.is_match(file_name) {
