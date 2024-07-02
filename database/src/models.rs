@@ -16,7 +16,7 @@ impl User {
     }
 }
 
-#[derive(FromRow)]
+#[derive(FromRow, Clone)]
 pub struct List {
     pub id: String,
     pub owner_id: String,
@@ -32,7 +32,7 @@ pub struct ListUpdate {
     pub timeout_seconds: Option<i64>,
 }
 
-#[derive(FromRow)]
+#[derive(FromRow, Clone)]
 pub struct Item {
     pub id: String,
     pub list_id: String,

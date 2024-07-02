@@ -171,4 +171,17 @@ impl Database {
         .await?;
         Ok(res.rows_affected())
     }
+
+    pub async fn delete_list_item(&self, list_id: &str, id: &str) -> Result<u64> {
+        let res = sqlx::query(
+            r#"
+            DELETE FROM "item" WHERE "list_id" = $1 AND "id" = $2
+            "#,
+        )
+        .bind(list_id)
+        .bind(id)
+        .execute(&self.pool)
+        .await?;
+        Ok(res.rows_affected())
+    }
 }

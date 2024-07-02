@@ -1,6 +1,7 @@
 use core::fmt;
 use rocket::{http::Status, serde::json::Json, Responder};
 use serde::Serialize;
+use std::io;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -16,14 +17,14 @@ pub struct Error {
 }
 
 impl Error {
-    pub fn new<S: Into<String>>(
+    pub fn new<S: fmt::Display>(
         status: Status,
         message: impl Into<String>,
         error: Option<S>,
     ) -> Self {
         let err = ErrorModel {
             message: message.into(),
-            error: error.map(|e| e.into()),
+            error: error.map(|e| e.to_string()),
         };
         let inner = (status, Json(err));
         Self { inner }

@@ -1,31 +1,10 @@
 mod list;
 pub use list::*;
+
+mod items;
+pub use items::*;
+
 use serde::Serialize;
-
-#[macro_export]
-macro_rules! lazy_from {
-    ($from:ty, $to:ty, $( $field:tt, )*) => {
-        impl From<&$from> for $to {
-            fn from(value: &$from) -> Self {
-                Self {
-                    $(
-                        $field: value.$field.clone(),
-                    )*
-                }
-            }
-        }
-
-        impl From<$from> for $to {
-            fn from(value: $from) -> Self {
-                Self {
-                    $(
-                        $field: value.$field,
-                    )*
-                }
-            }
-        }
-    };
-}
 
 #[derive(Serialize)]
 pub struct ListResponse<I> {

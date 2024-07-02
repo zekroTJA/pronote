@@ -1,4 +1,3 @@
-use crate::lazy_from;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -19,7 +18,15 @@ pub struct ListUpdate {
     pub timeout_seconds: Option<i64>,
 }
 
-lazy_from! {
-    database::models::List, List,
-    id, owner_id, created_at, name, description, timeout_seconds,
+impl From<database::models::List> for List {
+    fn from(value: database::models::List) -> Self {
+        Self {
+            id: value.id,
+            owner_id: value.owner_id,
+            created_at: value.created_at,
+            name: value.name,
+            description: value.description,
+            timeout_seconds: value.timeout_seconds,
+        }
+    }
 }
