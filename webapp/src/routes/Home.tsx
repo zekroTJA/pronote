@@ -1,18 +1,42 @@
+import { Entry, SideBar } from "../components/SideBar";
 import { useEffect, useState } from "react";
 
-import { AuthCheck } from "../models/models";
+import { List } from "../models/models";
+import styled from "styled-components";
 import useApi from "../hooks/useApi";
+
+const Container = styled.div`
+  display: flex;
+  gap: 1em;
+  height: 100%;
+`;
 
 const Home: React.FC = () => {
   const fetch = useApi();
 
-  const [me, setMe] = useState<AuthCheck | undefined>(undefined);
+  const [lists, setLists] = useState<List[] | undefined>(undefined);
 
   useEffect(() => {
-    fetch((c) => c.authCheck()).then((v) => setMe(v));
+    fetch((c) => c.lists()).then((v) => setLists(v?.items));
   }, []);
 
-  return <>{(me && <p>Welcome, {me.nickname}!</p>) || <p>Loading ...</p>}</>;
+  const onAdd = () => {
+    console.log("foo bar");
+  };
+
+  const entries = lists?.map(
+    (l) =>
+      ({
+        title: l.name,
+        link: `/${l.id}`,
+      } as Entry)
+  );
+
+  return (
+    <Container>
+      <SideBar entries={entries} onAdd={onAdd} />
+    </Container>
+  );
 };
 
 export default Home;

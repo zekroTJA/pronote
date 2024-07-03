@@ -26,6 +26,8 @@ const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${(p) => p.theme.background};
     color: ${(p) => p.theme.text};
+    margin: 0;
+    padding: 0;
   }
 
   &::-webkit-scrollbar-track {

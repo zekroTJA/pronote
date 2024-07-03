@@ -1,4 +1,11 @@
-import { AuthCheck } from "../models/models";
+import {
+  AuthCheck,
+  Item,
+  ItemUpdate,
+  List,
+  ListResponse,
+  ListUpdate,
+} from "../models/models";
 
 const ROOT_URL =
   import.meta.env.REACT_APP_API_ROOT_URL ??
@@ -78,6 +85,42 @@ export class APIService extends HttpClient {
 
   authCheck(): Promise<AuthCheck> {
     return this.req("GET", "auth/check");
+  }
+
+  lists(): Promise<ListResponse<List>> {
+    return this.req("GET", "lists");
+  }
+
+  list(id: string): Promise<List> {
+    return this.req("GET", `lists/${id}`);
+  }
+
+  add_list(list: ListUpdate): Promise<List> {
+    return this.req("POST", "lists", list);
+  }
+
+  update_list(id: string, list: ListUpdate): Promise<void> {
+    return this.req("POST", `lists/${id}`, list);
+  }
+
+  delete_list(id: string): Promise<void> {
+    return this.req("DELETE", `lists/${id}`);
+  }
+
+  items(list_id: string): Promise<ListResponse<Item>> {
+    return this.req("GET", `lists/${list_id}/items`);
+  }
+
+  add_items(list_id: string, item: ItemUpdate): Promise<Item> {
+    return this.req("POST", `lists/${list_id}/items`, item);
+  }
+
+  update_items(list_id: string, id: string, item: ItemUpdate): Promise<void> {
+    return this.req("POST", `lists/${list_id}/items/${id}`, item);
+  }
+
+  delete_items(list_id: string, id: string): Promise<void> {
+    return this.req("DELETE", `lists/${list_id}/items/${id}`);
   }
 }
 
