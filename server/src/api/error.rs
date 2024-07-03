@@ -1,7 +1,6 @@
 use core::fmt;
 use rocket::{http::Status, serde::json::Json, Responder};
 use serde::Serialize;
-use std::io;
 
 pub type Result<T> = std::result::Result<T, Error>;
 

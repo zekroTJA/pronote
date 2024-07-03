@@ -9,8 +9,8 @@ pub enum Part {
     Expired,
 }
 
-impl From<i64> for Part {
-    fn from(value: i64) -> Self {
+impl From<i32> for Part {
+    fn from(value: i32) -> Self {
         match value {
             0 => Self::Top,
             1 => Self::Bottom,
@@ -20,7 +20,7 @@ impl From<i64> for Part {
 }
 
 impl Part {
-    pub fn value(&self) -> i64 {
+    pub fn value(&self) -> i32 {
         match self {
             Part::Top => 0,
             Part::Bottom => 1,

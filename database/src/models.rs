@@ -36,7 +36,7 @@ pub struct ListUpdate {
 pub struct Item {
     pub id: String,
     pub list_id: String,
-    pub part: i64,
+    pub part: i32,
     pub created_at: DateTime<Utc>,
     pub edited_at: DateTime<Utc>,
     pub title: String,
@@ -47,6 +47,6 @@ pub struct ItemUpdate {
     pub title: String,
     pub description: Option<String>,
     pub list_id: String,
-    pub part: i64,
+    pub part: i32,
     pub edited_at: DateTime<Utc>,
 }
