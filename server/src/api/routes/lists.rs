@@ -96,7 +96,7 @@ async fn items(
             .iter()
             .filter(|i| {
                 Part::from(i.part) == Part::Bottom
-                    && (now - i.edited_at).num_seconds() > timeout_seconds
+                    && (now - i.edited_at).num_seconds() > timeout_seconds as i64
             })
             .collect();
         if !new_expired.is_empty() {

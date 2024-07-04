@@ -8,14 +8,14 @@ pub struct List {
     pub created_at: DateTime<Utc>,
     pub name: String,
     pub description: Option<String>,
-    pub timeout_seconds: Option<i64>,
+    pub timeout_seconds: Option<i32>,
 }
 
 #[derive(Deserialize)]
 pub struct ListUpdate {
     pub name: String,
     pub description: Option<String>,
-    pub timeout_seconds: Option<i64>,
+    pub timeout_seconds: Option<i32>,
 }
 
 impl From<database::models::List> for List {

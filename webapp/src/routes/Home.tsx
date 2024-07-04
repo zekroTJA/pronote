@@ -20,9 +20,7 @@ const Home: React.FC = () => {
     fetch((c) => c.lists()).then((v) => setLists(v?.items));
   }, []);
 
-  const onAdd = () => {
-    console.log("foo bar");
-  };
+  const onAdd = () => {};
 
   const entries = lists?.map(
     (l) =>
