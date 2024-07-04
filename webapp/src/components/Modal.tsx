@@ -1,50 +1,71 @@
+import { PropsWithStyle } from "./props";
 import React from "react";
 import { styled } from "styled-components";
 
-type Props = {
+type Props = ShowProps &
+  PropsWithStyle & {
+    heading?: string | JSX.Element;
+    body?: string | JSX.Element;
+    controls?: JSX.Element[];
+    onClose?: () => void;
+  };
+
+type ShowProps = {
   show: boolean;
-  heading?: string | JSX.Element;
-  body?: string | JSX.Element;
-  footer?: JSX.Element;
-  onClose?: () => void;
 };
 
-const Container = styled.div<{ show: boolean }>`
+const Container = styled.div<ShowProps>`
   position: fixed;
-  display: flex;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  backdrop-filter: blur(${(p) => (p.show ? "30px" : "0")});
+  backdrop-filter: blur(${(p) => (p.show ? "10px" : "0")});
+  background-color: ${(p) => (p.show ? "rgba(0 0 0 / 50%)" : "transparent")};
   pointer-events: ${(p) => (p.show ? "all" : "none")};
   opacity: ${(p) => (p.show ? 1 : 0)};
 
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 `;
 
-const InnerContainer = styled.div`
+const InnerContainer = styled.div<ShowProps>`
   width: fit-content;
   height: fit-content;
-  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   border-radius: 12px;
   background-color: ${(p) => p.theme.background2};
   box-shadow: 0 0 30px 5px rgba(0 0 0 / 20%);
   margin: 7em auto 0 auto;
+  transform: scale(${(p) => (p.show ? 1 : 0.95)});
+  padding: 1em;
+
+  transition: all 0.2s ease;
 `;
 
-const Heading = styled.div``;
+const Title = styled.h1`
+  font-size: 1em;
+  font-weight: lighter;
+  opacity: 0.5;
+  text-transform: uppercase;
+  margin: 0;
+`;
 
-const Body = styled.div``;
-
-const Footer = styled.div``;
+const Controls = styled.div`
+  display: flex;
+  gap: 1em;
+  justify-content: end;
+  margin-top: 1em;
+`;
 
 export const Modal: React.FC<Props> = ({
   show,
   heading,
   body,
-  footer,
+  controls,
   onClose,
+  ...props
 }) => {
   const onContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).id !== "container") return;
@@ -53,10 +74,14 @@ export const Modal: React.FC<Props> = ({
 
   return (
     <Container id="container" show={show} onClick={onContainerClick}>
-      <InnerContainer>
-        {heading ?? <Heading>{heading}</Heading>}
-        {body ?? <Body>{body}</Body>}
-        {footer ?? <Footer>{footer}</Footer>}
+      <InnerContainer show={show} {...props}>
+        {heading && (
+          <div>
+            {typeof heading === "string" ? <Title>{heading}</Title> : heading}
+          </div>
+        )}
+        {body && <div>{body}</div>}
+        {controls && <Controls>{controls}</Controls>}
       </InnerContainer>
     </Container>
   );
