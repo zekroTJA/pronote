@@ -1,26 +1,26 @@
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 
-import Foo from "./routes/Foo";
 import Home from "./routes/Home";
+import List from "./routes/List";
 import Login from "./routes/Login";
-import { Modal } from "./components/Modal";
 import { RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
-import { useStore } from "./services/store";
 import useStoredTheme from "./hooks/useStoredTheme";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    children: [
+      {
+        path: "/:listId",
+        element: <List />,
+      },
+    ],
   },
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/foo/:id",
-    element: <Foo />,
   },
 ]);
 

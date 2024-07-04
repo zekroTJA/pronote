@@ -1,4 +1,5 @@
 import AddIcon from "../assets/add.svg?react";
+import { Link } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import { uid } from "react-uid";
@@ -61,10 +62,12 @@ const ItemsContainer = styled.div`
   gap: 0.5em;
 `;
 
-const Item = styled.div`
+const Item = styled(Link)`
   padding: 0.1em 0.3em;
   border-radius: 5px;
   cursor: pointer;
+  text-decoration: none;
+  color: ${(p) => p.theme.text};
 
   transition: all 0.2s ease;
 
@@ -84,7 +87,9 @@ export const SideBar: React.FC<Props> = ({ entries, onAdd }) => {
       </HeadingContainer>
       <ItemsContainer>
         {entries?.map((v) => (
-          <Item key={uid(v)}>{v.title}</Item>
+          <Item key={uid(v)} to={v.link}>
+            {v.title}
+          </Item>
         ))}
       </ItemsContainer>
     </Container>

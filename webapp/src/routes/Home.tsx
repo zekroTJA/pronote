@@ -1,10 +1,13 @@
 import { Entry, SideBar } from "../components/SideBar";
-import { List, ListUpdate } from "../models/models";
-import { useEffect, useState } from "react";
 
 import ListModal from "../components/Modals/AddListModal";
+import { ListUpdate } from "../models/models";
+import { Outlet } from "react-router";
 import styled from "styled-components";
 import useApi from "../hooks/useApi";
+import { useEffectAsync } from "../hooks/useEffectAsync";
+import { useState } from "react";
+import { useStore } from "../services/store";
 
 const Container = styled.div`
   display: flex;
@@ -14,14 +17,15 @@ const Container = styled.div`
 
 const Home: React.FC = () => {
   const fetch = useApi();
-
-  const [lists, setLists] = useState<List[] | undefined>(undefined);
-
-  useEffect(() => {
-    fetch((c) => c.lists()).then((v) => setLists(v?.items));
-  }, []);
-
+  const [lists, setLists] = useStore((s) => [s.lists, s.setLists]);
   const [showAddModal, setShowAddModal] = useState(false);
+
+  useEffectAsync(async () => {
+    const res = await fetch((c) => c.lists());
+    if (res) {
+      setLists(res.items);
+    }
+  }, []);
 
   const onAdd = () => {
     setShowAddModal(!showAddModal);
@@ -45,6 +49,7 @@ const Home: React.FC = () => {
   return (
     <Container>
       <SideBar entries={entries} onAdd={onAdd} />
+      <Outlet />
       <ListModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}
