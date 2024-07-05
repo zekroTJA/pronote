@@ -1,8 +1,8 @@
 import { Entry, SideBar } from "../components/SideBar";
+import { Outlet, useLocation } from "react-router";
 
-import ListModal from "../components/Modals/AddListModal";
+import ListEditModal from "../components/Modals/ListEditModal";
 import { ListUpdate } from "../models/models";
-import { Outlet } from "react-router";
 import styled from "styled-components";
 import useApi from "../hooks/useApi";
 import { useEffectAsync } from "../hooks/useEffectAsync";
@@ -15,10 +15,11 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const Home: React.FC = () => {
+const Main: React.FC = () => {
   const fetch = useApi();
   const [lists, setLists] = useStore((s) => [s.lists, s.setLists]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const location = useLocation();
 
   useEffectAsync(async () => {
     const res = await fetch((c) => c.lists());
@@ -48,9 +49,9 @@ const Home: React.FC = () => {
 
   return (
     <Container>
-      <SideBar entries={entries} onAdd={onAdd} />
+      <SideBar entries={entries} onAdd={onAdd} selected={location.pathname} />
       <Outlet />
-      <ListModal
+      <ListEditModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}
         onSubmit={onAddSubmit}
@@ -59,4 +60,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Main;

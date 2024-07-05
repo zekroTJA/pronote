@@ -25,13 +25,15 @@ type CreateState = {
 const stateReducer = (
   state: CreateState,
   [type, payload]:
+    | ["set", CreateState]
     | ["set_name", string]
     | ["set_description", string]
     | ["set_timeout", number]
     | ["set_error", string?]
-    | ["reset"]
 ) => {
   switch (type) {
+    case "set":
+      return payload;
     case "set_name":
       return { ...state, name: payload };
     case "set_description":
@@ -40,13 +42,6 @@ const stateReducer = (
       return { ...state, timeout_seconds: payload };
     case "set_error":
       return { ...state, error: payload };
-    case "reset":
-      return {
-        name: "",
-        description: "",
-        timeout_seconds: 0,
-        error: undefined,
-      };
     default:
       return state;
   }
@@ -72,26 +67,17 @@ const ErrorText = styled.span`
   color: ${(p) => p.theme.red};
 `;
 
-const ListModal: React.FC<Props> = ({
+const ListEditModal: React.FC<Props> = ({
   show,
   initialState,
   onSubmit,
   onClose,
 }) => {
-  const [state, dispatchState] = useReducer(
-    stateReducer,
-    (initialState
-      ? {
-          name: initialState.name,
-          description: initialState.description ?? "",
-          timeout_seconds: initialState.timeout_seconds ?? 0,
-        }
-      : {
-          name: "",
-          description: "",
-          timeout_seconds: 0,
-        }) as CreateState
-  );
+  const [state, dispatchState] = useReducer(stateReducer, {
+    name: "",
+    description: "",
+    timeout_seconds: 0,
+  } as CreateState);
 
   const onCreate = () => {
     if (!state.name) {
@@ -106,16 +92,37 @@ const ListModal: React.FC<Props> = ({
     });
   };
 
+  const reset = () => {
+    const s = initialState
+      ? {
+          name: initialState.name,
+          description: initialState.description ?? "",
+          timeout_seconds: initialState.timeout_seconds ?? 0,
+        }
+      : {
+          name: "",
+          description: "",
+          timeout_seconds: 0,
+          error: undefined,
+        };
+    dispatchState(["set", s]);
+  };
+
   useEffect(() => {
-    if (show) return;
-    dispatchState(["reset"]);
+    if (!show) return;
+    reset();
   }, [show]);
+
+  useEffect(() => {
+    if (!initialState) return;
+    reset();
+  }, [initialState]);
 
   return (
     <StyledModal
       show={show}
       onClose={onClose}
-      heading={"Create new List"}
+      heading={initialState ? "Edit List" : "Create new List"}
       body={
         <BodyContainer>
           <div>
@@ -152,7 +159,9 @@ const ListModal: React.FC<Props> = ({
         <Button variant="gray" onClick={onClose}>
           Cancel
         </Button>,
-        <Button onClick={onCreate}>Create</Button>,
+        <Button onClick={onCreate}>
+          {initialState ? "Update" : "Create"}
+        </Button>,
       ]}
     />
   );
@@ -163,4 +172,4 @@ function nullify<T>(v: T): T | undefined {
   return v;
 }
 
-export default ListModal;
+export default ListEditModal;

@@ -46,8 +46,8 @@ const InnerContainer = styled.div<ShowProps>`
 
 const Title = styled.h1`
   font-size: 1em;
-  font-weight: lighter;
-  opacity: 0.5;
+  font-weight: light;
+  opacity: 0.7;
   text-transform: uppercase;
   margin: 0;
 `;

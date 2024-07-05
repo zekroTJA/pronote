@@ -1,8 +1,8 @@
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 
-import Home from "./routes/Home";
 import List from "./routes/List";
 import Login from "./routes/Login";
+import Main from "./routes/Main";
 import { RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 import useStoredTheme from "./hooks/useStoredTheme";
@@ -10,7 +10,7 @@ import useStoredTheme from "./hooks/useStoredTheme";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Main />,
     children: [
       {
         path: "/:listId",

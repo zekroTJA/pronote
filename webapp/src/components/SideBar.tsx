@@ -1,7 +1,8 @@
+import styled, { css } from "styled-components";
+
 import AddIcon from "../assets/add.svg?react";
 import { Link } from "react-router-dom";
 import React from "react";
-import styled from "styled-components";
 import { uid } from "react-uid";
 
 export type Entry = {
@@ -11,6 +12,7 @@ export type Entry = {
 
 type Props = {
   entries?: Entry[];
+  selected?: string;
   onAdd: () => void;
 };
 
@@ -62,7 +64,7 @@ const ItemsContainer = styled.div`
   gap: 0.5em;
 `;
 
-const Item = styled(Link)`
+const Item = styled(Link)<{ selected: boolean }>`
   padding: 0.1em 0.3em;
   border-radius: 5px;
   cursor: pointer;
@@ -71,12 +73,18 @@ const Item = styled(Link)`
 
   transition: all 0.2s ease;
 
+  ${(p) =>
+    p.selected &&
+    css`
+      background-color: ${(p) => p.theme.background3};
+    `}
+
   &:hover {
     background-color: ${(p) => p.theme.background3};
   }
 `;
 
-export const SideBar: React.FC<Props> = ({ entries, onAdd }) => {
+export const SideBar: React.FC<Props> = ({ entries, selected, onAdd }) => {
   return (
     <Container>
       <HeadingContainer>
@@ -87,7 +95,7 @@ export const SideBar: React.FC<Props> = ({ entries, onAdd }) => {
       </HeadingContainer>
       <ItemsContainer>
         {entries?.map((v) => (
-          <Item key={uid(v)} to={v.link}>
+          <Item key={uid(v)} to={v.link} selected={selected === v.link}>
             {v.title}
           </Item>
         ))}
