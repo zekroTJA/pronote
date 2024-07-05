@@ -9,7 +9,7 @@ import {
 
 const ROOT_URL =
   import.meta.env.REACT_APP_API_ROOT_URL ??
-  (import.meta.env.NODE_ENV === "production"
+  (import.meta.env.PROD
     ? "/api"
     : "http://localhost:8000/api");
 
