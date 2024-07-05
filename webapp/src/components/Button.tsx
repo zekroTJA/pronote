@@ -1,12 +1,6 @@
-import {
-  ExecutionContext,
-  ExecutionProps,
-  FastOmit,
-  styled,
-} from "styled-components";
+import { ExecutionContext, styled } from "styled-components";
 
 import Color from "color";
-import { DetailedHTMLProps } from "react";
 
 export type ButtonVariant =
   | "default"

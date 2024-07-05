@@ -1,5 +1,6 @@
 import { formatDuration, intervalToDuration } from "date-fns";
 import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 import Button from "../components/Button";
 import ClockIcon from "../assets/clock.svg?react";
@@ -10,7 +11,6 @@ import PencilIcon from "../assets/pencil.svg?react";
 import TrashIcon from "../assets/trash.svg?react";
 import styled from "styled-components";
 import useApi from "../hooks/useApi";
-import { useParams } from "react-router";
 import { useStore } from "../services/store";
 
 const Container = styled.div`
@@ -58,6 +58,7 @@ function fmtDuration(seconds?: number): string {
 
 const List: React.FC = () => {
   const fetch = useApi();
+  const navigate = useNavigate();
   const { listId } = useParams();
   const [lists, setLists] = useStore((s) => [s.lists, s.setLists]);
   const list = useMemo(
@@ -68,6 +69,16 @@ const List: React.FC = () => {
 
   const onEdit = () => {
     setShowEditModal(true);
+  };
+
+  const onDelete = async () => {
+    if (!listId) return;
+
+    await fetch((c) => c.delete_list(listId));
+
+    navigate("/");
+    const newLists = lists.filter((l) => l.id !== listId);
+    setLists(newLists);
   };
 
   const onEditSubmit = async (v: ListUpdate) => {
@@ -99,7 +110,7 @@ const List: React.FC = () => {
               <PencilIcon />
               <span>Edit</span>
             </ActionButton>
-            <ActionButton variant="red">
+            <ActionButton variant="red" onClick={onDelete}>
               <TrashIcon />
               <span>Delete</span>
             </ActionButton>
