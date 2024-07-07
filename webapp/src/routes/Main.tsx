@@ -11,8 +11,13 @@ import { useStore } from "../services/store";
 
 const Container = styled.div`
   display: flex;
-  gap: 1em;
   height: 100%;
+`;
+
+const OutletContainer = styled.div`
+  overflow-y: auto;
+  width: 100%;
+  padding: 0 1em;
 `;
 
 const Main: React.FC = () => {
@@ -50,7 +55,9 @@ const Main: React.FC = () => {
   return (
     <Container>
       <SideBar entries={entries} onAdd={onAdd} selected={location.pathname} />
-      <Outlet />
+      <OutletContainer>
+        <Outlet />
+      </OutletContainer>
       <ListEditModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}

@@ -12,6 +12,7 @@ type Props = {
 
 const Container = styled.div`
   width: 100%;
+  margin-top: 1em;
 `;
 
 const ItemsContainer = styled.div`
@@ -28,7 +29,7 @@ const ListItems: React.FC<Props> = ({ list }) => {
   const [items, setItems] = useState<Item[] | undefined>(undefined);
 
   useEffectAsync(async () => {
-    let res = await fetch((c) => c.items(list.id));
+    const res = await fetch((c) => c.items(list.id));
     if (res) {
       setItems(res.items);
     }
@@ -62,7 +63,7 @@ const ListItems: React.FC<Props> = ({ list }) => {
   const createItem = async (item: Item) => {
     if (!items) return false;
 
-    let res = await fetch((c) =>
+    const res = await fetch((c) =>
       c.add_items(list.id, { ...item, part: Part.Bottom })
     );
 

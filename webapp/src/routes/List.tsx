@@ -17,6 +17,8 @@ const Container = styled.div`
   width: 100%;
   max-width: 40em;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.header`
@@ -52,8 +54,7 @@ const ActionButton = styled(Button)`
 function fmtDuration(seconds?: number): string {
   if (!seconds) return "No timeout for list elements.";
   const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
-  const timeout = formatDuration(duration);
-  return `${timeout}`;
+  return formatDuration(duration);
 }
 
 const List: React.FC = () => {

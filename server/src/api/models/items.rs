@@ -1,7 +1,7 @@
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, TimeDelta, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, PartialEq, Eq, Hash)]
+#[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum Part {
     Top,
@@ -29,7 +29,7 @@ impl Part {
     }
 }
 
-#[derive(Deserialize, Serialize, Hash)]
+#[derive(Deserialize, Serialize, Hash, Clone)]
 pub struct Item {
     pub id: String,
     pub list_id: String,
@@ -38,6 +38,8 @@ pub struct Item {
     pub edited_at: DateTime<Utc>,
     pub title: String,
     pub description: Option<String>,
+    pub expires_in_seconds: Option<i64>,
+    pub expires_at: Option<DateTime<Utc>>,
 }
 
 impl From<database::models::Item> for Item {
@@ -50,6 +52,29 @@ impl From<database::models::Item> for Item {
             edited_at: value.edited_at,
             title: value.title,
             description: value.description,
+            expires_in_seconds: None,
+            expires_at: None,
+        }
+    }
+}
+
+impl Item {
+    pub fn with_expires(self, list_expiry_seconds: Option<i32>, now: DateTime<Utc>) -> Self {
+        if self.part == Part::Top {
+            return self;
+        }
+
+        let Some(list_expiry_seconds) = list_expiry_seconds else {
+            return self;
+        };
+
+        let expires_in_seconds = list_expiry_seconds as i64 - (now - self.edited_at).num_seconds();
+        let expires_at = now + TimeDelta::seconds(expires_in_seconds);
+
+        Self {
+            expires_in_seconds: Some(expires_in_seconds),
+            expires_at: Some(expires_at),
+            ..self
         }
     }
 }

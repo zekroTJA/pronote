@@ -43,4 +43,6 @@ export type Item = ItemUpdate & {
   list_id: string;
   created_at: string;
   edited_at: string;
+  expires_in_seconds?: number;
+  expires_at?: string;
 };

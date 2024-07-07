@@ -1,6 +1,8 @@
 import { Item, Part } from "../models/models";
+import { formatDuration, intervalToDuration } from "date-fns";
 
 import Button from "./Button";
+import ClockIcon from "../assets/clock.svg?react";
 import DownIcon from "../assets/down.svg?react";
 import TrashIcon from "../assets/trash.svg?react";
 import UpIcon from "../assets/up.svg?react";
@@ -12,6 +14,14 @@ type Props = {
   onUpdate: (v: Item) => Promise<boolean>;
   onDelete: (v: Item) => void;
 };
+
+function fmtDuration(seconds: number): string {
+  const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
+  return formatDuration(duration, {
+    zero: true,
+    format: ["days", "hours", "minutes"],
+  });
+}
 
 const ControlsContainer = styled.div`
   display: flex;
@@ -66,6 +76,18 @@ const Description = styled.textarea`
   outline: none;
 `;
 
+const Expires = styled.div`
+  display: flex;
+  gap: 0.2em;
+  align-items: center;
+  font-size: 0.8em;
+  opacity: 0.6;
+
+  > svg {
+    height: 1.2em;
+  }
+`;
+
 const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
   const [_item, setItem] = useState(item ?? ({ title: "" } as Item));
 
@@ -92,7 +114,6 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
           onBlur={() => _onUpdate()}
           placeholder={!_item.id ? "Create a new item" : "Title ..."}
         />
-
         <Description
           value={_item.description}
           rows={_item.description?.split("\n").length ?? 1}
@@ -102,6 +123,12 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
           onBlur={() => _onUpdate()}
           placeholder="Description ..."
         />
+        {_item.expires_in_seconds && _item.part === Part.Bottom && (
+          <Expires>
+            <ClockIcon />
+            {fmtDuration(_item.expires_in_seconds)}
+          </Expires>
+        )}
       </ContentContainer>
       {item?.id && (
         <ControlsContainer>

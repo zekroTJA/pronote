@@ -88,10 +88,10 @@ async fn items(
         return Err(Error::not_found("no list found with the given ID"));
     };
 
-    let items = database.list_items(id).await?;
+    let mut items = database.list_items(id).await?;
+    let now = Utc::now();
 
     if let Some(timeout_seconds) = list.timeout_seconds {
-        let now = Utc::now();
         let new_expired: Vec<_> = items
             .iter()
             .filter(|i| {
@@ -114,25 +114,28 @@ async fn items(
                     )
                     .await?;
             }
-            let items: Vec<_> = items
+            items = items
                 .iter()
+                .cloned()
                 .map(|i| {
                     if new_expired.iter().any(|e| e.id == i.id) {
                         database::models::Item {
                             part: Part::Expired.value(),
-                            ..i.clone()
+                            ..i
                         }
                     } else {
-                        i.clone()
+                        i
                     }
                 })
-                .map(|v| v.into())
                 .collect();
-            return Ok(Json(items.into()));
         }
     }
 
-    let items: Vec<_> = items.iter().cloned().map(|v| v.into()).collect();
+    let items: Vec<_> = items
+        .iter()
+        .cloned()
+        .map(|i| Item::from(i).with_expires(list.timeout_seconds, now))
+        .collect();
     Ok(Json(items.into()))
 }
 
@@ -161,10 +164,8 @@ async fn add_item(
 
     database.add_list_item(&item).await?;
 
-    Ok(
-        Created::new(format!("/api/list/{}/items/{}", list.id, item.id))
-            .tagged_body(Json(item.into())),
-    )
+    let item = Item::from(item).with_expires(list.timeout_seconds, Utc::now());
+    Ok(Created::new(format!("/api/list/{}/items/{}", list.id, item.id)).tagged_body(Json(item)))
 }
 
 #[post("/<id>/items/<item_id>", data = "<item>")]
