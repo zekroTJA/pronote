@@ -99,7 +99,7 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
   };
 
   const _onRerank = async () => {
-    const part = _item.part === Part.Top ? Part.Bottom : Part.Top;
+    const part = _item.part === Part.Bottom ? Part.Top : Part.Bottom;
     const newItem = { ..._item, part };
     await onUpdate(newItem);
     setItem(newItem);

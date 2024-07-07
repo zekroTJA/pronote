@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import BulbIcon from "../assets/bulb.svg?react";
 import ListItem from "./ListItem";
+import Spoiler from "./Spoiler";
 import { styled } from "styled-components";
 import useApi from "../hooks/useApi";
 import { useEffectAsync } from "../hooks/useEffectAsync";
@@ -42,6 +43,10 @@ const Hint = styled.div`
     height: 1.4em;
     min-width: 1.4em;
   }
+`;
+
+const StyledSpoiler = styled(Spoiler)`
+  margin-top: 2em;
 `;
 
 const ListItems: React.FC<Props> = ({ list }) => {
@@ -107,11 +112,17 @@ const ListItems: React.FC<Props> = ({ list }) => {
       <ListItem item={i} onUpdate={updateItem} onDelete={deleteItem} />
     ));
 
+  const expiredItems = items
+    ?.filter((i) => i.part === Part.Expired)
+    .map((i) => (
+      <ListItem item={i} onUpdate={updateItem} onDelete={deleteItem} />
+    ));
+
   return (
     <Container>
       <PartHeading>Promoted</PartHeading>
       <ItemsContainer>
-        {((items?.length ?? 0 > 0) && topPartItems) || (
+        {((topPartItems?.length ?? 0 > 0) && topPartItems) || (
           <Hint>
             <BulbIcon />
             Promoted items will be placed here and will never expire. This is
@@ -121,7 +132,7 @@ const ListItems: React.FC<Props> = ({ list }) => {
       </ItemsContainer>
       <PartHeading>Stack</PartHeading>
       <ItemsContainer>
-        {((items?.length ?? 0) > 0 && bottomPartItems) || (
+        {((bottomPartItems?.length ?? 0) > 0 && bottomPartItems) || (
           <Hint>
             <BulbIcon />
             Here, newly added notes and ideas will be placed. When the list has
@@ -132,6 +143,17 @@ const ListItems: React.FC<Props> = ({ list }) => {
         <AddHeading>Add a new item</AddHeading>
         <ListItem onUpdate={createItem} onDelete={deleteItem} />
       </ItemsContainer>
+      <StyledSpoiler header="Expired items">
+        <ItemsContainer>
+          {((expiredItems?.length ?? 0) > 0 && expiredItems) || (
+            <Hint>
+              <BulbIcon />
+              Expired items will never be deleted and are tucked away safely
+              here!
+            </Hint>
+          )}
+        </ItemsContainer>
+      </StyledSpoiler>
     </Container>
   );
 };
