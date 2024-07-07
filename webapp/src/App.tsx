@@ -1,5 +1,6 @@
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 
+import Home from "./routes/Home";
 import List from "./routes/List";
 import Login from "./routes/Login";
 import Main from "./routes/Main";
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Main />,
     children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
       {
         path: "/:listId",
         element: <List />,

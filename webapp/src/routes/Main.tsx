@@ -1,5 +1,5 @@
 import { Entry, SideBar } from "../components/SideBar";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 import ListEditModal from "../components/Modals/ListEditModal";
 import { ListUpdate } from "../models/models";
@@ -25,6 +25,7 @@ const Main: React.FC = () => {
   const [lists, setLists] = useStore((s) => [s.lists, s.setLists]);
   const [showAddModal, setShowAddModal] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffectAsync(async () => {
     const res = await fetch((c) => c.lists());
@@ -41,6 +42,7 @@ const Main: React.FC = () => {
     const res = await fetch((c) => c.add_list(v));
     if (res) {
       setLists([...(lists ?? []), res]);
+      navigate(`/${res.id}`);
     }
   };
 
