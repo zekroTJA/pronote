@@ -1,6 +1,7 @@
 import { Item, List, Part } from "../models/models";
 import React, { useState } from "react";
 
+import BulbIcon from "../assets/bulb.svg?react";
 import ListItem from "./ListItem";
 import { styled } from "styled-components";
 import useApi from "../hooks/useApi";
@@ -28,6 +29,19 @@ const AddHeading = styled.span`
   font-size: 0.8em;
   opacity: 0.6;
   margin-top: 1em;
+`;
+
+const Hint = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  opacity: 0.6;
+  font-size: 0.9em;
+
+  > svg {
+    height: 1.4em;
+    min-width: 1.4em;
+  }
 `;
 
 const ListItems: React.FC<Props> = ({ list }) => {
@@ -96,11 +110,26 @@ const ListItems: React.FC<Props> = ({ list }) => {
   return (
     <Container>
       <PartHeading>Promoted</PartHeading>
-      <ItemsContainer>{items && topPartItems}</ItemsContainer>
+      <ItemsContainer>
+        {((items?.length ?? 0 > 0) && topPartItems) || (
+          <Hint>
+            <BulbIcon />
+            Promoted items will be placed here and will never expire. This is
+            the place where your most important notes and ideas live.
+          </Hint>
+        )}
+      </ItemsContainer>
       <PartHeading>Stack</PartHeading>
       <ItemsContainer>
-        {items && bottomPartItems}
-        <AddHeading>Add new item</AddHeading>
+        {((items?.length ?? 0) > 0 && bottomPartItems) || (
+          <Hint>
+            <BulbIcon />
+            Here, newly added notes and ideas will be placed. When the list has
+            an expire time, they will be removed when the time has passed
+            without editing. Promote them when you want to persist them!
+          </Hint>
+        )}
+        <AddHeading>Add a new item</AddHeading>
         <ListItem onUpdate={createItem} onDelete={deleteItem} />
       </ItemsContainer>
     </Container>
