@@ -4,6 +4,7 @@ import AddIcon from "../assets/add.svg?react";
 import Button from "../components/Button";
 import ListEditModal from "../components/Modals/ListEditModal";
 import { ListUpdate } from "../models/models";
+import MaxWidthContainer from "../components/MaxWidthContainer";
 import { styled } from "styled-components";
 import useApi from "../hooks/useApi";
 import { useState } from "react";
@@ -92,7 +93,7 @@ const Home: React.FC = () => {
   ));
 
   return (
-    <>
+    <MaxWidthContainer>
       <Container>
         <section>
           <Header>Welcome! 👋</Header>
@@ -118,7 +119,7 @@ const Home: React.FC = () => {
         onClose={() => setShowAddModal(false)}
         onSubmit={onAddSubmit}
       />
-    </>
+    </MaxWidthContainer>
   );
 };
 

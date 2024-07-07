@@ -8,19 +8,12 @@ import DeleteModal from "../components/Modals/DeleteModal";
 import ListEditModal from "../components/Modals/ListEditModal";
 import ListItems from "../components/ListItems";
 import { ListUpdate } from "../models/models";
+import MaxWidthContainer from "../components/MaxWidthContainer";
 import PencilIcon from "../assets/pencil.svg?react";
 import TrashIcon from "../assets/trash.svg?react";
 import styled from "styled-components";
 import useApi from "../hooks/useApi";
 import { useStore } from "../services/store";
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 40em;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-`;
 
 const Header = styled.header`
   display: flex;
@@ -99,7 +92,7 @@ const List: React.FC = () => {
   };
 
   return (
-    <Container>
+    <MaxWidthContainer>
       {list && (
         <Header>
           <Heading>{list.name}</Heading>
@@ -136,7 +129,7 @@ const List: React.FC = () => {
         onClose={() => setShowDeleteModal(false)}
         onSubmit={onDeleteSubmit}
       />
-    </Container>
+    </MaxWidthContainer>
   );
 };
 
