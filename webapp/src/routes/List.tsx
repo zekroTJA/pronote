@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router";
 
 import Button from "../components/Button";
 import ClockIcon from "../assets/clock.svg?react";
+import DeleteModal from "../components/Modals/DeleteModal";
 import ListEditModal from "../components/Modals/ListEditModal";
 import ListItems from "../components/ListItems";
 import { ListUpdate } from "../models/models";
@@ -67,19 +68,10 @@ const List: React.FC = () => {
     [lists, listId]
   );
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const onEdit = () => {
     setShowEditModal(true);
-  };
-
-  const onDelete = async () => {
-    if (!listId) return;
-
-    await fetch((c) => c.delete_list(listId));
-
-    navigate("/");
-    const newLists = lists.filter((l) => l.id !== listId);
-    setLists(newLists);
   };
 
   const onEditSubmit = async (v: ListUpdate) => {
@@ -94,6 +86,16 @@ const List: React.FC = () => {
       listCopy[i].timeout_seconds = v.timeout_seconds;
       setLists(listCopy);
     }
+  };
+
+  const onDeleteSubmit = async () => {
+    if (!listId) return;
+
+    await fetch((c) => c.delete_list(listId));
+
+    navigate("/");
+    const newLists = lists.filter((l) => l.id !== listId);
+    setLists(newLists);
   };
 
   return (
@@ -111,7 +113,10 @@ const List: React.FC = () => {
               <PencilIcon />
               <span>Edit</span>
             </ActionButton>
-            <ActionButton variant="red" onClick={onDelete}>
+            <ActionButton
+              variant="red"
+              onClick={() => setShowDeleteModal(true)}
+            >
               <TrashIcon />
               <span>Delete</span>
             </ActionButton>
@@ -124,6 +129,12 @@ const List: React.FC = () => {
         onClose={() => setShowEditModal(false)}
         onSubmit={onEditSubmit}
         initialState={list}
+      />
+      <DeleteModal
+        show={showDeleteModal}
+        elementName={`the List "${list?.name}"`}
+        onClose={() => setShowDeleteModal(false)}
+        onSubmit={onDeleteSubmit}
       />
     </Container>
   );
