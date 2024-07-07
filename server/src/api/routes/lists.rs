@@ -162,7 +162,7 @@ async fn add_item(
         return Err(Error::not_found("no list found with the given ID"));
     };
 
-    if let Some(limit) = config.limit.as_ref().and_then(|l| l.list_items) {
+    if let Some(limit) = config.limit.as_ref().and_then(|l| l.items) {
         let count = database.list_items_count(&list.id).await?;
         if count >= limit {
             return Err(Error::bad_request("maximum amount of list items reached"));

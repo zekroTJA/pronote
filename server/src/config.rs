@@ -26,7 +26,7 @@ pub struct Database {
 #[derive(Deserialize, Debug)]
 pub struct Limit {
     pub lists: Option<i64>,
-    pub list_items: Option<i64>,
+    pub items: Option<i64>,
 }
 
 impl Config {
