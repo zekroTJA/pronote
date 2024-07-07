@@ -16,7 +16,6 @@
     "date-fns": "^3.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-dragula": "^1.1.17",
     "react-router": "^6.24.0",
     "react-router-dom": "^6.24.0",
     "react-uid": "^2.3.3",
