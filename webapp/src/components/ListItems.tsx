@@ -12,7 +12,7 @@ type Props = {
 
 const Container = styled.div`
   width: 100%;
-  margin-top: 1em;
+  margin: 1em 0;
 `;
 
 const ItemsContainer = styled.div`
@@ -22,6 +22,13 @@ const ItemsContainer = styled.div`
 `;
 
 const PartHeading = styled.h2``;
+
+const AddHeading = styled.span`
+  text-transform: uppercase;
+  font-size: 0.8em;
+  opacity: 0.6;
+  margin-top: 1em;
+`;
 
 const ListItems: React.FC<Props> = ({ list }) => {
   const fetch = useApi();
@@ -93,6 +100,7 @@ const ListItems: React.FC<Props> = ({ list }) => {
       <PartHeading>Stack</PartHeading>
       <ItemsContainer>
         {items && bottomPartItems}
+        <AddHeading>Add new item</AddHeading>
         <ListItem onUpdate={createItem} onDelete={deleteItem} />
       </ItemsContainer>
     </Container>
