@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use serde_valid::Validate;
 
 #[derive(Serialize, Hash)]
 pub struct List {
@@ -11,9 +12,11 @@ pub struct List {
     pub timeout_seconds: Option<i32>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Validate)]
 pub struct ListUpdate {
+    #[validate(max_length = 100)]
     pub name: String,
+    #[validate(max_length = 2000)]
     pub description: Option<String>,
     pub timeout_seconds: Option<i32>,
 }

@@ -4,13 +4,13 @@ use serde::Serialize;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-#[derive(Serialize)]
-struct ErrorModel {
-    message: String,
-    error: Option<String>,
+#[derive(Serialize, Debug)]
+pub struct ErrorModel {
+    pub message: String,
+    pub error: Option<String>,
 }
 
-#[derive(Responder)]
+#[derive(Responder, Debug)]
 pub struct Error {
     inner: (Status, Json<ErrorModel>),
 }
@@ -35,6 +35,10 @@ impl Error {
 
     pub fn not_found(message: impl Into<String>) -> Self {
         Self::message(Status::NotFound, message)
+    }
+
+    pub fn bad_request(message: impl Into<String>) -> Self {
+        Self::message(Status::BadRequest, message)
     }
 }
 

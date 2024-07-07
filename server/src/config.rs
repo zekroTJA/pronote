@@ -7,6 +7,7 @@ use url::Url;
 pub struct Config {
     pub oidc: Oidc,
     pub database: Database,
+    pub limit: Option<Limit>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -20,6 +21,12 @@ pub struct Oidc {
 #[derive(Deserialize, Debug)]
 pub struct Database {
     pub dsn: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Limit {
+    pub lists: Option<i64>,
+    pub list_items: Option<i64>,
 }
 
 impl Config {

@@ -1,7 +1,10 @@
-use crate::api::{
-    error::{Error, Result},
-    guards::Auth,
-    models::{Item, ItemUpdate, List, ListResponse, ListUpdate, Part},
+use crate::{
+    api::{
+        error::{Error, Result},
+        guards::{Auth, Validated},
+        models::{Item, ItemUpdate, List, ListResponse, ListUpdate, Part},
+    },
+    config::Config,
 };
 use chrono::Utc;
 use database::Database;
@@ -30,10 +33,18 @@ async fn list(user: Auth, id: &str, database: &State<Arc<Database>>) -> Result<J
 #[post("/", data = "<list>")]
 async fn add_list(
     user: Auth,
-    list: Json<ListUpdate>,
+    list: Validated<Json<ListUpdate>>,
     database: &State<Arc<Database>>,
+    config: &State<Config>,
 ) -> Result<Created<Json<List>>> {
-    let Json(list) = list;
+    if let Some(limit) = config.limit.as_ref().and_then(|l| l.lists) {
+        let count = database.lists_count(user.id()).await?;
+        if count >= limit {
+            return Err(Error::bad_request("maximum amount of lists reached"));
+        }
+    }
+
+    let Validated(Json(list)) = list;
     let new_list = database::models::List {
         id: xid::new().to_string(),
         owner_id: user.id().to_string(),
@@ -52,10 +63,10 @@ async fn add_list(
 async fn update_list(
     user: Auth,
     id: &str,
-    list: Json<ListUpdate>,
+    list: Validated<Json<ListUpdate>>,
     database: &State<Arc<Database>>,
 ) -> Result<Status> {
-    let Json(list) = list;
+    let Validated(Json(list)) = list;
     let new_list = database::models::ListUpdate {
         name: list.name,
         description: list.description,
@@ -143,14 +154,22 @@ async fn items(
 async fn add_item(
     user: Auth,
     id: &str,
-    item: Json<ItemUpdate>,
+    item: Validated<Json<ItemUpdate>>,
     database: &State<Arc<Database>>,
+    config: &State<Config>,
 ) -> Result<Created<Json<Item>>> {
     let Some(list) = database.list_by_id(user.id(), id).await? else {
         return Err(Error::not_found("no list found with the given ID"));
     };
 
-    let Json(item) = item;
+    if let Some(limit) = config.limit.as_ref().and_then(|l| l.list_items) {
+        let count = database.list_items_count(&list.id).await?;
+        if count >= limit {
+            return Err(Error::bad_request("maximum amount of list items reached"));
+        }
+    }
+
+    let Validated(Json(item)) = item;
     let now = Utc::now();
     let item = database::models::Item {
         id: xid::new().to_string(),
@@ -173,14 +192,14 @@ async fn update_items(
     user: Auth,
     id: &str,
     item_id: &str,
-    item: Json<ItemUpdate>,
+    item: Validated<Json<ItemUpdate>>,
     database: &State<Arc<Database>>,
 ) -> Result<Status> {
     let Some(list) = database.list_by_id(user.id(), id).await? else {
         return Err(Error::not_found("no list found with the given ID"));
     };
 
-    let Json(item) = item;
+    let Validated(Json(item)) = item;
 
     let affected_rows = database
         .update_list_item(

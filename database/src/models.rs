@@ -50,3 +50,8 @@ pub struct ItemUpdate {
     pub part: i32,
     pub edited_at: DateTime<Utc>,
 }
+
+#[derive(FromRow)]
+pub struct Count {
+    pub count: i64,
+}

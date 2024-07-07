@@ -1,7 +1,8 @@
 use chrono::{DateTime, TimeDelta, Utc};
 use serde::{Deserialize, Serialize};
+use serde_valid::Validate;
 
-#[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone)]
+#[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone, Debug)]
 #[serde(rename_all = "lowercase")]
 pub enum Part {
     Top,
@@ -79,9 +80,11 @@ impl Item {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Validate)]
 pub struct ItemUpdate {
+    #[validate(max_length = 100)]
     pub title: String,
+    #[validate(max_length = 2000)]
     pub description: Option<String>,
     pub part: Part,
 }

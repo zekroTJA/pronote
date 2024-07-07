@@ -1146,6 +1146,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8478577c03552c21db0e2724ffb8986a5ce7af88107e6be5d2ee6e158c12800"
 
 [[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2151,6 +2160,51 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_valid"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32c92fa3e7abc9108490d7f9ac752008e12297d5a969511a66fd0a42fbcaf1cd"
+dependencies = [
+ "indexmap",
+ "itertools",
+ "num-traits",
+ "once_cell",
+ "paste",
+ "regex",
+ "serde",
+ "serde_json",
+ "serde_valid_derive",
+ "serde_valid_literal",
+ "thiserror",
+ "unicode-segmentation",
+]
+
+[[package]]
+name = "serde_valid_derive"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02529dfc96005e7e0d2dd5a12a7d9664cf51be96a5b1a58a496e8080020711ee"
+dependencies = [
+ "itertools",
+ "paste",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "strsim",
+ "syn 2.0.68",
+]
+
+[[package]]
+name = "serde_valid_literal"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70b385e1d2d8fd49695e9ae387ebf9bde548fe8dcecd1cf5f164f9c2a2b4a3c3"
+dependencies = [
+ "paste",
+ "regex",
+]
+
+[[package]]
 name = "server"
 version = "0.1.0"
 dependencies = [
@@ -2167,6 +2221,7 @@ dependencies = [
  "regex",
  "rocket",
  "serde",
+ "serde_valid",
  "url",
  "xid",
 ]

@@ -1,6 +1,6 @@
 use crate::{
     error::{Error, Result},
-    models::{Item, ItemUpdate, List, ListUpdate, User},
+    models::{Count, Item, ItemUpdate, List, ListUpdate, User},
 };
 use futures::TryStreamExt;
 use sqlx::PgPool;
@@ -57,6 +57,18 @@ impl Database {
 
         let res = rows.try_collect().await?;
         Ok(res)
+    }
+
+    pub async fn lists_count(&self, user_id: &str) -> Result<i64> {
+        let res: Count = sqlx::query_as(
+            r#"
+            SELECT COUNT("id") FROM "list" WHERE "owner_id" = $1
+            "#,
+        )
+        .bind(user_id)
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(res.count)
     }
 
     pub async fn list_by_id(&self, user_id: &str, list_id: &str) -> Result<Option<List>> {
@@ -133,6 +145,18 @@ impl Database {
 
         let res = rows.try_collect().await?;
         Ok(res)
+    }
+
+    pub async fn list_items_count(&self, list_id: &str) -> Result<i64> {
+        let res: Count = sqlx::query_as(
+            r#"
+            SELECT COUNT("id") FROM "item" WHERE "list_id" = $1
+            "#,
+        )
+        .bind(list_id)
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(res.count)
     }
 
     pub async fn add_list_item(&self, item: &Item) -> Result<u64> {
