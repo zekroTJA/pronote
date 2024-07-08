@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
 import AddIcon from "../assets/add.svg?react";
+import Banner from "../assets/banner.svg?react";
 import { Link } from "react-router-dom";
 import React from "react";
 import { uid } from "react-uid";
@@ -84,9 +85,17 @@ const Item = styled(Link)<{ selected: boolean }>`
   }
 `;
 
+const StyledBanner = styled(Banner)`
+  height: fit-content;
+  padding: 0.2em 1em;
+`;
+
 export const SideBar: React.FC<Props> = ({ entries, selected, onAdd }) => {
   return (
     <Container>
+      <Link to="/">
+        <StyledBanner />
+      </Link>
       <HeadingContainer>
         <Heading>Lists</Heading>
         <AddButton onClick={onAdd}>

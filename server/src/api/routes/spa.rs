@@ -12,7 +12,7 @@ const ROOT_PATH: &str = env!("WEBAPP_ROOT_DIR");
 
 lazy_static! {
     static ref re: Regex =
-        Regex::new(r#"\.(?:js|css|html|svg|webp|jpe?g|png)$"#).expect("web file regex");
+        Regex::new(r#"\.(?:js|css|html|svg|webp|jpe?g|png|ico)$"#).expect("web file regex");
 }
 
 #[get("/")]
