@@ -1,10 +1,13 @@
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 import AddIcon from "../assets/add.svg?react";
 import Banner from "../assets/banner.svg?react";
 import { Link } from "react-router-dom";
-import React from "react";
+import UpIcon from "../assets/up.svg?react";
 import { uid } from "react-uid";
+
+const SIDEBAR_WIDTH = 15;
 
 export type Entry = {
   title: string;
@@ -17,11 +20,19 @@ type Props = {
   onAdd: () => void;
 };
 
-const Container = styled.div`
+const Container = styled.div<{ shown: boolean }>`
   height: 100%;
-  width: 15em;
+  width: ${SIDEBAR_WIDTH}em;
   background-color: ${(p) => p.theme.background2};
   padding: 0.5em;
+  z-index: 1;
+  transition: left 0.2s ease;
+
+  @media screen and (max-width: 40em) {
+    left: ${(p) => (p.shown ? 0 : -SIDEBAR_WIDTH)}em;
+    position: absolute;
+    box-shadow: 0 0 ${(p) => (p.shown ? "2em" : 0)} 0 rgba(0 0 0 / 0.3);
+  }
 `;
 
 const HeadingContainer = styled.div`
@@ -90,25 +101,60 @@ const StyledBanner = styled(Banner)`
   padding: 0.2em 1em;
 `;
 
+const ShowButton = styled(UpIcon)<{ shown: boolean }>`
+  display: none;
+
+  width: 1.5em;
+  height: 1.5em;
+  position: absolute;
+  left: ${(p) => (p.shown ? SIDEBAR_WIDTH + 0.5 : 0.5)}em;
+  top: 0.5em;
+  background-color: ${(p) => p.theme.background2};
+  border-radius: 8px;
+  padding: 0.2em;
+  cursor: pointer;
+  opacity: 0.7;
+  transform: rotate(${(p) => (p.shown ? "-90deg" : "90deg")});
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  @media screen and (max-width: 40em) {
+    display: block;
+  }
+`;
+
 export const SideBar: React.FC<Props> = ({ entries, selected, onAdd }) => {
+  const [shown, setShown] = useState(true);
+
   return (
-    <Container>
-      <Link to="/">
-        <StyledBanner />
-      </Link>
-      <HeadingContainer>
-        <Heading>Lists</Heading>
-        <AddButton onClick={onAdd}>
-          <AddIcon />
-        </AddButton>
-      </HeadingContainer>
-      <ItemsContainer>
-        {entries?.map((v) => (
-          <Item key={uid(v)} to={v.link} selected={selected === v.link}>
-            {v.title}
-          </Item>
-        ))}
-      </ItemsContainer>
-    </Container>
+    <>
+      <ShowButton onClick={() => setShown(!shown)} shown={shown} />
+      <Container shown={shown}>
+        <Link to="/">
+          <StyledBanner />
+        </Link>
+        <HeadingContainer>
+          <Heading>Lists</Heading>
+          <AddButton onClick={onAdd}>
+            <AddIcon />
+          </AddButton>
+        </HeadingContainer>
+        <ItemsContainer>
+          {entries?.map((v) => (
+            <Item
+              key={uid(v)}
+              to={v.link}
+              selected={selected === v.link}
+              onClick={() => setShown(false)}
+            >
+              {v.title}
+            </Item>
+          ))}
+        </ItemsContainer>
+      </Container>
+    </>
   );
 };
