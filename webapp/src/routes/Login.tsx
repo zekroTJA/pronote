@@ -5,6 +5,8 @@ import styled from "styled-components";
 
 const apiServiceInstance = APIServiceInstance;
 
+const LOGIN_REDIRECT = import.meta.env.VITE_LOGIN_REDIRECT ?? "/";
+
 const Container = styled.div`
   width: 100%;
   padding: 1em;
@@ -26,7 +28,7 @@ const LoginContainer = styled.div`
 
 const Login: React.FC = () => {
   const onLoginClick = () => {
-    apiServiceInstance.redirectLogin("/");
+    apiServiceInstance.redirectLogin(LOGIN_REDIRECT);
   };
 
   return (

@@ -28,6 +28,7 @@ jobs:
         working-directory: webapp
         env:
           VITE_API_ROOT_URL: "https://api.pronote.app"
+          VITE_LOGIN_REDIRECT: "https://pronote.app"
         run: bun run build
 
       - name: Mirror index.html to 404.html
