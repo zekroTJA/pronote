@@ -1,0 +1,42 @@
+name: Webapp Pages Deploy
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "webapp/**"
+      - ".github/workflows/webapp-pages.yml"
+  workflow_dispatch:
+
+jobs:
+  pages:
+    name: Deploy to Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        working-directory: webapp
+        run: bun install
+
+      - name: Build Static Content
+        working-directory: webapp
+        env:
+          REACT_APP_API_ROOT_URL: "https://api.pronote.app"
+        run: bun run build
+
+      - name: Mirror index.html to 404.html
+        working-directory: webapp
+        run: cp dist/index.html dist/404.html
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: webapp/dist
+          cname: pronote.app
