@@ -20,4 +20,21 @@ The inspiration to build this web app actually came from a problem I got with th
 
 ## Hosting
 
-*TODO™️*
+Pronote can be hosted using the fully self-contained Docker image, which contains the backend as well as the frontend files.
+
+### Backend Configuration
+
+The server is configured using the following environment variables.
+
+| Key | Type | Requiry | Example | Description |
+|-----|------|---------|---------|-------------|
+| `PN_OIDC_ID` | `string` | Yes | `6nv4s1...` | The OIDC client ID. |
+| `PN_OIDC_SECRET` | `string` | Yes | `sd8923...` | The OIDC client secret. |
+| `PN_OIDC_ISSUER` | `string` | Yes | `https://example.eu.auth0.com` | The OIDC issuer URL. |
+| `PN_OIDC_REDIRECT` | `string` | Yes | `https://example.com/api/auth/callback` | The OIDC redierct URL. This should end with `/api/auth/callback` as long as the path is not re-written by your reverse-proxy. |
+| `PN_DATABASE_DSN` | `string` | Yes | `postgres://username:password@domain:port/database` | The connection string for the Postgres database used to connect to. |
+| `PN_LIMIT_LISTS` | `number` | No | `50` | Limit the amount of lists a user can create. |
+| `PN_LIMIT_ITEMS` | `number` | No | `200` | Limit the amount of items a user can create inside a list. |
+| `PN_CORS_ORIGINS` | `string[]` | No | `[ https://example.com, https://example2.com ]` | Enable CORS for the given origin URLs. |
+| `PN_SERVESPA` | `boolean` | No<br/>Default: `true` | `false` | Control if the backend should serve the frontend SPA files. This should be disabled if you serve the SPA files separately from the backend. |
+| `RUST_LOG` | `string` | No<br/>Default: `info` | `debug,rocket=info,hyper_util=info,hyper=info` | Configure log levels. See [`env_logger`](https://docs.rs/env_logger/latest/env_logger/) documentation for more details.  |
