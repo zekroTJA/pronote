@@ -17,7 +17,7 @@ const Container = styled.div`
 const OutletContainer = styled.div`
   overflow-y: auto;
   width: 100%;
-  padding: 0 1em;
+  padding: 0 2em;
 `;
 
 const Main: React.FC = () => {

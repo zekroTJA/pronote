@@ -19,7 +19,7 @@ function fmtDuration(seconds: number): string {
   const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
   return formatDuration(duration, {
     zero: true,
-    format: ["days", "hours", "minutes"],
+    format: ["days", "hours", "minutes", "seconds"],
   });
 }
 
@@ -28,6 +28,7 @@ const ControlsContainer = styled.div`
   flex-direction: column;
   gap: 0.5em;
   opacity: 0;
+  transition: opacity 0.2s ease;
 
   > ${Button} {
     padding: 0.2em 0.4em;
@@ -88,14 +89,33 @@ const Expires = styled.div`
   }
 `;
 
+const UnsavedIndicator = styled.div`
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 100%;
+  background-color: ${(p) => p.theme.text};
+  margin-top: 0.3em;
+`;
+
 const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
   const [_item, setItem] = useState(item ?? ({ title: "" } as Item));
+  const [unsaved, setUnsaved] = useState(false);
+
+  const _setItem = (update: Partial<Item>) => {
+    const newItem = { ..._item, ...update };
+    setUnsaved(
+      (newItem.title ?? "") !== (item?.title ?? "") ||
+        (newItem.description ?? "") !== (item?.description ?? "")
+    );
+    setItem(newItem);
+  };
 
   const _onUpdate = async () => {
     if (!_item.title) return;
     if (await onUpdate(_item)) {
       setItem({ title: "" } as Item);
     }
+    setUnsaved(false);
   };
 
   const _onRerank = async () => {
@@ -110,16 +130,14 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
       <ContentContainer>
         <Title
           value={_item.title}
-          onInput={(e) => setItem({ ..._item, title: e.currentTarget.value })}
+          onInput={(e) => _setItem({ title: e.currentTarget.value })}
           onBlur={() => _onUpdate()}
           placeholder={!_item.id ? "Create a new item" : "Title ..."}
         />
         <Description
           value={_item.description}
           rows={_item.description?.split("\n").length ?? 1}
-          onInput={(e) =>
-            setItem({ ..._item, description: e.currentTarget.value })
-          }
+          onInput={(e) => _setItem({ description: e.currentTarget.value })}
           onBlur={() => _onUpdate()}
           placeholder="Description ..."
         />
@@ -130,6 +148,7 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
           </Expires>
         )}
       </ContentContainer>
+      {unsaved && <UnsavedIndicator />}
       {item?.id && (
         <ControlsContainer>
           <Button variant="pink" onClick={_onRerank}>
