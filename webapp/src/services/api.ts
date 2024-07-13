@@ -8,7 +8,7 @@ import {
 } from "../models/models";
 
 const ROOT_URL =
-  import.meta.env.REACT_APP_API_ROOT_URL ??
+  import.meta.env.VITE_API_ROOT_URL ??
   (import.meta.env.PROD
     ? "/api"
     : "http://localhost:8000/api");
