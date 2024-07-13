@@ -3,14 +3,16 @@ use rocket::figment::{providers::Env, Figment};
 use serde::Deserialize;
 use url::Url;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Config {
     pub oidc: Oidc,
     pub database: Database,
     pub limit: Option<Limit>,
+    pub cors: Option<Cors>,
+    pub servespa: Option<bool>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Oidc {
     pub id: String,
     pub secret: String,
@@ -18,15 +20,20 @@ pub struct Oidc {
     pub issuer: Url,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Database {
     pub dsn: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Limit {
     pub lists: Option<i64>,
     pub items: Option<i64>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Cors {
+    pub origins: Vec<String>,
 }
 
 impl Config {

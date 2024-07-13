@@ -9,7 +9,12 @@ use anyhow::Result;
 use database::Database;
 use error::Error;
 use openid::DiscoveredClient;
-use rocket::{catch, catchers, http::Status, Request};
+use rocket::{
+    catch, catchers,
+    http::{Method, Status},
+    Request,
+};
+use rocket_cors::{AllowedOrigins, CorsOptions};
 use routes::{auth, lists, spa};
 use std::sync::Arc;
 
@@ -24,17 +29,37 @@ pub async fn run(cfg: Config, database: Arc<Database>) -> Result<()> {
 
     let jwt_handler = jwt::Handler::new();
 
-    rocket::build()
+    let mut rocket = rocket::build()
         .manage(oidc_client)
         .manage(jwt_handler)
         .manage(database)
-        .manage(cfg)
-        .mount("/", spa::routes())
+        .manage(cfg.clone())
         .mount("/api/auth", auth::routes())
         .mount("/api/lists", lists::routes())
-        .register("/api", catchers![default_catcher])
-        .launch()
-        .await?;
+        .register("/api", catchers![default_catcher]);
+
+    if cfg.servespa.unwrap_or(true) {
+        rocket = rocket.mount("/", spa::routes());
+    }
+
+    if let Some(cors) = cfg.cors {
+        let allowed_origins = AllowedOrigins::some_exact(&cors.origins);
+        let allowed_methods = [Method::Get, Method::Post, Method::Delete]
+            .into_iter()
+            .map(From::from)
+            .collect();
+        let cors = CorsOptions {
+            allowed_origins,
+            allowed_methods,
+            allow_credentials: true,
+            ..Default::default()
+        }
+        .to_cors()?;
+
+        rocket = rocket.attach(cors);
+    }
+
+    rocket.launch().await?;
 
     Ok(())
 }
