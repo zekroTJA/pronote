@@ -17,7 +17,7 @@ use std::sync::Arc;
 #[get("/")]
 async fn lists(user: Auth, database: &State<Arc<Database>>) -> Result<Json<ListResponse<List>>> {
     let lists = database.lists(user.id()).await?;
-    let res: Vec<_> = lists.iter().cloned().map(|v| v.into()).collect();
+    let res: Vec<_> = lists.into_iter().map(|v| v.into()).collect();
     Ok(Json(res.into()))
 }
 
@@ -143,8 +143,7 @@ async fn items(
     }
 
     let items: Vec<_> = items
-        .iter()
-        .cloned()
+        .into_iter()
         .map(|i| Item::from(i).with_expires(list.timeout_seconds, now))
         .collect();
     Ok(Json(items.into()))
