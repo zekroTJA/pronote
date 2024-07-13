@@ -122,7 +122,6 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
     const part = _item.part === Part.Bottom ? Part.Top : Part.Bottom;
     const newItem = { ..._item, part };
     await onUpdate(newItem);
-    setItem(newItem);
   };
 
   return (

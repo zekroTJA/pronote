@@ -55,6 +55,7 @@ const ListItems: React.FC<Props> = ({ list }) => {
   const [items, setItems] = useState<Item[] | undefined>(undefined);
 
   useEffectAsync(async () => {
+    setItems(undefined);
     const res = await fetch((c) => c.items(list.id));
     if (res) {
       setItems(res.items);
