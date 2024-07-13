@@ -3,7 +3,7 @@
 <hr />
 
 <center>
-*A simple web application to better manage your great as well as your dumb ideas.*
+<i>A simple web application to better manage your great as well as your dumb ideas.</i>
 </center>
 
 ## Concept
@@ -26,7 +26,7 @@ Pronote can be hosted using the fully self-contained Docker image, which contain
 
 The server is configured using the following environment variables.
 
-| Key | Type | Requiry | Example | Description |
+| Key | Type | Required | Example | Description |
 |-----|------|---------|---------|-------------|
 | `PN_OIDC_ID` | `string` | Yes | `6nv4s1...` | The OIDC client ID. |
 | `PN_OIDC_SECRET` | `string` | Yes | `sd8923...` | The OIDC client secret. |
