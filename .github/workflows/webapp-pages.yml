@@ -29,6 +29,7 @@ jobs:
         env:
           VITE_API_ROOT_URL: "https://api.pronote.app"
           VITE_LOGIN_REDIRECT: "https://pronote.app"
+          VITE_IMPRINT_URL: "https://www.zekro.de/imprint"
         run: bun run build
 
       - name: Mirror index.html to 404.html

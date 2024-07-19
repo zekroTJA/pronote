@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled, { css } from "styled-components";
 
 import AddIcon from "../assets/add.svg?react";
 import Banner from "../assets/banner.svg?react";
+import BugReport from "./Modals/BugReport";
+import Button from "./Button";
 import { Link } from "react-router-dom";
+import QuestionIcon from "../assets/question.svg?react";
 import UpIcon from "../assets/up.svg?react";
 import { uid } from "react-uid";
 
 const SIDEBAR_WIDTH = 15;
+
+const IMPRINT_URL: string | undefined = import.meta.env.VITE_IMPRINT_URL;
 
 export type Entry = {
   title: string;
@@ -21,6 +26,8 @@ type Props = {
 };
 
 const Container = styled.div<{ shown: boolean }>`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: ${SIDEBAR_WIDTH}em;
   background-color: ${(p) => p.theme.background2};
@@ -44,7 +51,7 @@ const Heading = styled.h1`
   margin: 0;
   text-transform: uppercase;
   font-size: 1rem;
-  opacity: 0.4;
+  opacity: 0.7;
   font-weight: lighter;
   margin-left: 0.3em;
   margin-bottom: 0.7em;
@@ -126,8 +133,24 @@ const ShowButton = styled(UpIcon)<{ shown: boolean }>`
   }
 `;
 
+const BottomPart = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin-top: auto;
+`;
+
+const Footer = styled.div`
+  text-align: center;
+  font-size: 0.7em;
+  opacity: 0.5;
+`;
+
 export const SideBar: React.FC<Props> = ({ entries, selected, onAdd }) => {
   const [shown, setShown] = useState(true);
+  const [showBugReportModal, setShowBugReportModal] = useState(false);
+
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
 
   return (
     <>
@@ -154,7 +177,28 @@ export const SideBar: React.FC<Props> = ({ entries, selected, onAdd }) => {
             </Item>
           ))}
         </ItemsContainer>
+        <BottomPart>
+          <Button variant="gray" onClick={() => setShowBugReportModal(true)}>
+            <QuestionIcon />
+            Found an issue?
+          </Button>
+          <Footer>
+            © {currentYear} Pronote{" "}
+            {IMPRINT_URL && (
+              <>
+                &nbsp;&nbsp;•&nbsp;&nbsp;
+                <a href="https://www.zekro.de/imprint" target="_blank">
+                  Imprint
+                </a>
+              </>
+            )}
+          </Footer>
+        </BottomPart>
       </Container>
+      <BugReport
+        show={showBugReportModal}
+        onClose={() => setShowBugReportModal(false)}
+      />
     </>
   );
 };

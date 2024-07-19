@@ -18,6 +18,7 @@ const Container = styled.div<ShowProps>`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 10;
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(${(p) => (p.show ? "10px" : "0")});

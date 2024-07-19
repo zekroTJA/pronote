@@ -18,6 +18,8 @@ tasks:
     deps:
       - deps-webapp
     dir: webapp
+    env:
+      VITE_IMPRINT_URL: "https://youtu.be/dQw4w9WgXcQ"
     cmds:
       - bun run dev
 
