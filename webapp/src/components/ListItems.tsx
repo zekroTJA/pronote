@@ -7,6 +7,7 @@ import Spoiler from "./Spoiler";
 import { styled } from "styled-components";
 import useApi from "../hooks/useApi";
 import { useEffectAsync } from "../hooks/useEffectAsync";
+import { uid } from "react-uid";
 
 type Props = {
   list: List;
@@ -91,7 +92,7 @@ const ListItems: React.FC<Props> = ({ list }) => {
     if (!items) return false;
 
     const res = await fetch((c) =>
-      c.add_items(list.id, { ...item, part: Part.Bottom })
+      c.add_items(list.id, { ...item, part: Part.Bottom }),
     );
 
     if (res) {
@@ -104,19 +105,34 @@ const ListItems: React.FC<Props> = ({ list }) => {
   const topPartItems = items
     ?.filter((i) => i.part === Part.Top)
     .map((i) => (
-      <ListItem item={i} onUpdate={updateItem} onDelete={deleteItem} />
+      <ListItem
+        key={uid(i)}
+        item={i}
+        onUpdate={updateItem}
+        onDelete={deleteItem}
+      />
     ));
 
   const bottomPartItems = items
     ?.filter((i) => i.part === Part.Bottom)
     .map((i) => (
-      <ListItem item={i} onUpdate={updateItem} onDelete={deleteItem} />
+      <ListItem
+        key={uid(i)}
+        item={i}
+        onUpdate={updateItem}
+        onDelete={deleteItem}
+      />
     ));
 
   const expiredItems = items
     ?.filter((i) => i.part === Part.Expired)
     .map((i) => (
-      <ListItem item={i} onUpdate={updateItem} onDelete={deleteItem} />
+      <ListItem
+        key={uid(i)}
+        item={i}
+        onUpdate={updateItem}
+        onDelete={deleteItem}
+      />
     ));
 
   return (

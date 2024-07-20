@@ -105,13 +105,14 @@ const ListItem: React.FC<Props> = ({ item, onUpdate, onDelete }) => {
     const newItem = { ..._item, ...update };
     setUnsaved(
       (newItem.title ?? "") !== (item?.title ?? "") ||
-        (newItem.description ?? "") !== (item?.description ?? "")
+        (newItem.description ?? "") !== (item?.description ?? ""),
     );
     setItem(newItem);
   };
 
   const _onUpdate = async () => {
     if (!_item.title) return;
+    if (!unsaved) return;
     if (await onUpdate(_item)) {
       setItem({ title: "" } as Item);
     }

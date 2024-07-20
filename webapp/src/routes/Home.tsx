@@ -9,6 +9,7 @@ import { styled } from "styled-components";
 import useApi from "../hooks/useApi";
 import { useState } from "react";
 import { useStore } from "../services/store";
+import { uid } from "react-uid";
 
 const Container = styled.div`
   padding-top: 1em;
@@ -86,7 +87,7 @@ const Home: React.FC = () => {
   };
 
   const listElements = lists?.map((l, idx) => (
-    <ListItem to={`/${l.id}`} idx={idx}>
+    <ListItem to={`/${l.id}`} idx={idx} key={uid(l)}>
       <h2>{l.name}</h2>
       <span>{l.description}</span>
     </ListItem>
