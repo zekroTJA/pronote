@@ -8,6 +8,7 @@ use crate::{config::Config, jwt};
 use anyhow::Result;
 use database::Database;
 use error::Error;
+use log::info;
 use openid::DiscoveredClient;
 use rocket::{
     catch, catchers,
@@ -42,7 +43,7 @@ pub async fn run(cfg: Config, database: Arc<Database>) -> Result<()> {
         rocket = rocket.mount("/", spa::routes());
     }
 
-    if let Some(cors) = cfg.cors {
+    if let Some(ref cors) = cfg.cors {
         let allowed_origins = AllowedOrigins::some_exact(&cors.origins);
         let allowed_methods = [Method::Get, Method::Post, Method::Delete]
             .into_iter()
@@ -57,6 +58,8 @@ pub async fn run(cfg: Config, database: Arc<Database>) -> Result<()> {
         .to_cors()?;
 
         rocket = rocket.attach(cors);
+
+        info!("CORS is enabled for the domains {:?}", &cfg.cors);
     }
 
     rocket.launch().await?;
